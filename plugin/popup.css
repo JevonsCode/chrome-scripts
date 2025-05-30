@@ -1,6 +1,6 @@
 /**
- * Chrome Scripts Manager - 弹窗样式
- * 现代化UI设计
+ * Chrome Scripts Manager - 简约Instagram风格
+ * 现代化简约设计
  */
 
 * {
@@ -13,9 +13,9 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 14px;
   line-height: 1.5;
-  color: #333;
-  background: #f8f9fa;
-  min-width: 200px;
+  color: #262626;
+  background: #fafafa;
+  min-width: 380px;
 }
 
 .container {
@@ -23,45 +23,53 @@ body {
   max-height: 500px;
   display: flex;
   flex-direction: column;
+  background: white;
 }
 
-/* 头部样式 */
+/* 头部样式 - 简约风格 */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  padding: 20px 24px;
+  background: white;
+  border-bottom: 1px solid #dbdbdb;
 }
 
 .header h1 {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   margin: 0;
+  color: #262626;
 }
 
 .sync-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  border-radius: 6px;
+  background: #f5f5f5;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
   padding: 8px;
-  color: white;
+  color: #262626;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sync-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
+  background: #efefef;
+  border-color: #c7c7c7;
 }
 
 .sync-btn:active {
-  transform: scale(0.95);
+  transform: scale(0.98);
 }
 
 .sync-btn.syncing {
   animation: spin 1s linear infinite;
+  background: #e3f2fd;
+  border-color: #1976d2;
+  color: #1976d2;
 }
 
 @keyframes spin {
@@ -69,23 +77,23 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* 状态栏 */
+/* 状态栏 - 简约风格 */
 .status {
-  padding: 12px 20px;
-  background: #e9ecef;
-  border-bottom: 1px solid #dee2e6;
+  padding: 12px 24px;
+  background: #fafafa;
+  border-bottom: 1px solid #dbdbdb;
   font-size: 12px;
-  color: #6c757d;
+  color: #8e8e8e;
 }
 
 .status.success {
-  background: #d4edda;
-  color: #155724;
+  background: #f1f8e9;
+  color: #2e7d32;
 }
 
 .status.error {
-  background: #f8d7da;
-  color: #721c24;
+  background: #ffebee;
+  color: #d32f2f;
 }
 
 /* 脚本容器 */
@@ -93,131 +101,190 @@ body {
   flex: 1;
   overflow-y: auto;
   max-height: 350px;
+  background: white;
 }
 
 .scripts-list {
-  padding: 8px;
+  padding: 16px 24px;
 }
 
-/* 脚本项样式 */
+/* 脚本项样式 - Instagram风格 */
 .script-item {
   background: white;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  margin-bottom: 8px;
-  padding: 12px;
+  border: 1px solid #dbdbdb;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  padding: 16px;
   transition: all 0.2s ease;
 }
 
 .script-item:hover {
-  border-color: #667eea;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+  border-color: #a8a8a8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .script-item.disabled {
   opacity: 0.6;
-  background: #f8f9fa;
+  background: #fafafa;
 }
 
 .script-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.script-title-area {
+  flex: 1;
+  min-width: 0; /* 允许文本截断 */
 }
 
 .script-name {
   font-weight: 600;
-  color: #495057;
+  color: #262626;
   font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 4px;
+  word-break: break-word;
 }
 
 .script-badges {
   display: flex;
-  margin-left: 8px;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
 }
 
 .badge {
-  padding: 2px 6px;
+  padding: 4px 8px;
   border-radius: 12px;
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
-  margin-left: 4px;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 20px;
 }
 
 .badge.auto {
-  background: #d4edda;
-  color: #155724;
+  background: #e8f5e8;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
 }
 
 .badge.manual {
-  background: #fff3cd;
-  color: #856404;
+  background: #fff3e0;
+  color: #f57c00;
+  border: 1px solid #ffcc02;
 }
 
 .badge.disabled {
-  background: #f8d7da;
-  color: #721c24;
+  background: #ffebee;
+  color: #d32f2f;
+  border: 1px solid #ffcdd2;
 }
 
 .badge.timing {
-  background: #f8f9fa;
-  color: #495057;
-  border: 1px solid #dee2e6;
+  background: #f5f5f5;
+  color: #616161;
+  border: 1px solid #e0e0e0;
+}
+
+.script-description {
+  font-style: italic;
+  line-height: 1.4;
+  font-size: 12px;
+  color: #8e8e8e;
+  margin-bottom: 8px;
+  word-break: break-word;
 }
 
 .script-meta {
   font-size: 11px;
-  color: #6c757d;
-  margin-bottom: 8px;
+  color: #8e8e8e;
+  margin-bottom: 16px;
+  line-height: 1.3;
 }
 
 .script-actions {
   display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .btn {
-  padding: 6px 12px;
+  padding: 8px 16px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-right: 6px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  text-align: center;
+  white-space: nowrap;
+  text-decoration: none;
+  box-sizing: border-box;
 }
 
 .btn-primary {
-  background: #667eea;
+  background: #1976d2;
   color: white;
+  border: 1px solid #1976d2;
 }
 
 .btn-primary:hover {
-  background: #5a6fd8;
+  background: #1565c0;
+  border-color: #1565c0;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(25, 118, 210, 0.3);
+}
+
+.btn-primary:disabled {
+  background: #e0e0e0;
+  color: #9e9e9e;
+  border-color: #e0e0e0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .btn-secondary {
-  background: #6c757d;
-  color: white;
+  background: white;
+  color: #262626;
+  border: 1px solid #dbdbdb;
 }
 
 .btn-secondary:hover {
-  background: #5a6268;
+  background: #f5f5f5;
+  border-color: #c7c7c7;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.btn-secondary:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* 空状态 */
 .empty-state {
   text-align: center;
-  padding: 40px 20px;
-  color: #6c757d;
+  padding: 40px 24px;
+  color: #8e8e8e;
 }
 
 .empty-state svg {
@@ -229,18 +296,19 @@ body {
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 8px;
+  color: #262626;
 }
 
 .empty-state small {
   font-size: 12px;
-  color: #adb5bd;
+  color: #8e8e8e;
 }
 
 /* 底部信息 */
 .footer {
-  padding: 12px 20px;
-  background: white;
-  border-top: 1px solid #dee2e6;
+  padding: 16px 24px;
+  background: #fafafa;
+  border-top: 1px solid #dbdbdb;
 }
 
 .repo-info {
@@ -250,28 +318,28 @@ body {
 .repo-link {
   display: inline-flex;
   align-items: center;
-  color: #6c757d;
+  color: #8e8e8e;
   text-decoration: none;
-  font-size: 12px;
+  font-size: 11px;
   transition: color 0.2s ease;
 }
 
 .repo-link:hover {
-  color: #667eea;
+  color: #1976d2;
 }
 
 .repo-link svg {
   margin-right: 6px;
 }
 
-/* 模态框样式 */
+/* 模态框样式 - 简约风格 */
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -280,180 +348,241 @@ body {
 
 .modal-content {
   background: white;
-  border-radius: 8px;
-  width: 320px;
+  border-radius: 12px;
+  width: 360px;
   max-width: 90vw;
   max-height: 80vh;
   overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border: 1px solid #dbdbdb;
 }
 
 .modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
-  background: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
+  padding: 20px 24px;
+  background: white;
+  border-bottom: 1px solid #dbdbdb;
 }
 
 .modal-header h3 {
   font-size: 16px;
   font-weight: 600;
-  color: #495057;
+  color: #262626;
 }
 
 .close-btn {
-  background: none;
-  border: none;
+  background: #f5f5f5;
+  border: 1px solid #dbdbdb;
+  border-radius: 50%;
   cursor: pointer;
-  padding: 4px;
-  color: #6c757d;
-  transition: color 0.2s ease;
+  padding: 6px;
+  color: #8e8e8e;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
 }
 
 .close-btn:hover {
-  color: #495057;
+  background: #efefef;
+  color: #262626;
 }
 
 .modal-body {
-  padding: 20px;
-  max-height: 300px;
+  padding: 24px;
+  max-height: 400px;
   overflow-y: auto;
 }
 
+/* Checkbox样式 - 现代化设计 */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 500;
+  color: #262626;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 4px;
+  position: relative;
+}
+
+.checkbox-label input[type="checkbox"] {
+  display: none;
+}
+
+.checkmark {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  background: #fafafa;
+  border: 2px solid #dbdbdb;
+  border-radius: 4px;
+  margin-right: 12px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkbox-label:hover .checkmark {
+  border-color: #1976d2;
+  background: #f3f8ff;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark {
+  background: #1976d2;
+  border-color: #1976d2;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark:after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 10px;
+  border: 2px solid white;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+  top: 2px;
+  left: 6px;
+}
+
+.checkbox-label:hover input[type="checkbox"]:checked + .checkmark {
+  background: #1565c0;
+  border-color: #1565c0;
+}
+
+/* 设置组样式优化 */
 .setting-group {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .setting-group:last-child {
   margin-bottom: 0;
 }
 
-.setting-group label {
+.setting-group label:not(.checkbox-label) {
   display: block;
-  font-weight: 500;
-  color: #495057;
+  font-weight: 600;
+  color: #262626;
   margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 .setting-group textarea {
   width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  font-family: 'Monaco', 'Consolas', monospace;
-  font-size: 12px;
+  padding: 12px 16px;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  font-family: 'SFMono-Regular', 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: 13px;
   resize: vertical;
   min-height: 80px;
+  background: #fafafa;
+  transition: all 0.2s ease;
+  line-height: 1.4;
 }
 
 .setting-group textarea:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.25);
+  border-color: #1976d2;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+.setting-group select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  font-size: 13px;
+  background: #fafafa;
+  color: #262626;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.setting-group select:focus {
+  outline: none;
+  border-color: #1976d2;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+.setting-group input[type="text"] {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  font-size: 13px;
+  background: #fafafa;
+  transition: all 0.2s ease;
+}
+
+.setting-group input[type="text"]:focus {
+  outline: none;
+  border-color: #1976d2;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
 }
 
 .setting-group small {
   display: block;
-  margin-top: 4px;
-  font-size: 11px;
-  color: #6c757d;
-}
-
-.setting-group select {
+  margin-top: 8px;
   font-size: 12px;
-}
-
-.setting-group input[type="text"] {
-  font-size: 12px;
-}
-
-/* 开关样式 */
-.switch {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-}
-
-.switch input {
-  display: none;
-}
-
-.slider {
-  position: relative;
-  width: 44px;
-  height: 24px;
-  background: #ccc;
-  border-radius: 12px;
-  transition: background 0.2s ease;
-  margin-right: 12px;
-}
-
-.slider:before {
-  content: '';
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: white;
-  top: 2px;
-  left: 2px;
-  transition: transform 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-.switch input:checked + .slider {
-  background: #667eea;
-}
-
-.switch input:checked + .slider:before {
-  transform: translateX(20px);
-}
-
-.label-text {
-  font-weight: 500;
-  color: #495057;
+  color: #8e8e8e;
+  line-height: 1.4;
+  margin-left: 32px; /* 与checkbox对齐 */
 }
 
 .modal-footer {
   display: flex;
   justify-content: flex-end;
-  padding: 16px 20px;
-  background: #f8f9fa;
-  border-top: 1px solid #dee2e6;
+  gap: 12px;
+  padding: 20px 24px;
+  background: #fafafa;
+  border-top: 1px solid #dbdbdb;
 }
 
 .save-btn {
-  background: #667eea;
+  background: #1976d2;
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+  padding: 10px 20px;
+  border-radius: 8px;
   font-weight: 500;
   cursor: pointer;
-  margin-left: 8px;
   transition: background 0.2s ease;
+  font-size: 14px;
 }
 
 .save-btn:hover {
-  background: #5a6fd8;
+  background: #1565c0;
 }
 
 .cancel-btn {
-  background: #6c757d;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+  background: white;
+  color: #262626;
+  border: 1px solid #dbdbdb;
+  padding: 10px 20px;
+  border-radius: 8px;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
+  font-size: 14px;
 }
 
 .cancel-btn:hover {
-  background: #5a6268;
+  background: #f5f5f5;
+  border-color: #c7c7c7;
 }
 
 /* 响应式设计 */
@@ -464,10 +593,11 @@ body {
   
   .modal-content {
     width: 95vw;
+    margin: 0 10px;
   }
 }
 
-/* 滚动条样式 */
+/* 滚动条样式 - 简约风格 */
 .scripts-container::-webkit-scrollbar,
 .modal-body::-webkit-scrollbar {
   width: 6px;
@@ -475,21 +605,16 @@ body {
 
 .scripts-container::-webkit-scrollbar-track,
 .modal-body::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #f5f5f5;
 }
 
 .scripts-container::-webkit-scrollbar-thumb,
 .modal-body::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
+  background: #dbdbdb;
   border-radius: 3px;
 }
 
 .scripts-container::-webkit-scrollbar-thumb:hover,
 .modal-body::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-
-.script-description {
-  font-style: italic;
-  line-height: 1.3;
+  background: #c7c7c7;
 } 

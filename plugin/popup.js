@@ -173,13 +173,13 @@ function createScriptItemHTML(scriptName, script) {
   return `
     <div class="script-item ${!script.enabled ? 'disabled' : ''}" data-script="${scriptName}">
       <div class="script-header">
-        <div>
-          <span class="script-name">${scriptName}</span>
+        <div class="script-title-area">
+          <div class="script-name">${scriptName}</div>
           <div class="script-badges">${badges.join('')}</div>
         </div>
       </div>
       
-      <div class="script-description" style="font-size: 12px; color: #6c757d; margin-bottom: 6px;">
+      <div class="script-description">
         ${description}
       </div>
       
