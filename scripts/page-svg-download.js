@@ -62,7 +62,7 @@ function showPageInfo() {
   panel.innerHTML = `
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
       <h3 style="margin: 0; color: #667eea;">📊 页面信息 & SVG下载</h3>
-      <button onclick="this.parentElement.parentElement.remove()" 
+      <button id="close-info-panel" 
               style="background: #f0f0f0; border: none; border-radius: 50%; width: 30px; height: 30px; 
                      cursor: pointer; display: flex; align-items: center; justify-content: center;">
         ✕
@@ -112,12 +112,12 @@ function showPageInfo() {
     </div>
     
     <div style="margin-top: 15px; text-align: center; display: flex; justify-content: center; gap: 10px;">
-      <button onclick="navigator.clipboard.writeText('${pageInfo.url}').then(() => alert('URL已复制到剪贴板'))" 
+      <button id="copy-url-btn" 
               style="background: #667eea; color: white; border: none; padding: 8px 16px; 
                      border-radius: 6px; cursor: pointer; font-size: 12px;">
         📋 复制URL
       </button>
-      <button onclick="downloadAllSVGs()" 
+      <button id="download-svg-btn" 
               style="background: #28a745; color: white; border: none; padding: 8px 16px; 
                      border-radius: 6px; cursor: pointer; font-size: 12px;">
         📥 下载SVG
@@ -128,7 +128,52 @@ function showPageInfo() {
   // 添加到页面
   document.body.appendChild(panel);
   
+  // 绑定事件处理器（避免CSP问题）
+  bindInfoPanelEvents(pageInfo.url);
+  
   console.log('Chrome Scripts Manager: 页面信息脚本已执行', pageInfo);
+}
+
+/**
+ * 为信息面板绑定事件处理器
+ */
+function bindInfoPanelEvents(pageUrl) {
+  // 关闭按钮事件
+  const closeBtn = document.getElementById('close-info-panel');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      const panel = document.getElementById('chrome-scripts-page-info');
+      if (panel) {
+        panel.remove();
+      }
+    });
+  }
+  
+  // 复制URL按钮事件
+  const copyBtn = document.getElementById('copy-url-btn');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(pageUrl);
+        // 显示成功提示
+        copyBtn.textContent = '✅ 已复制';
+        copyBtn.style.background = '#28a745';
+        setTimeout(() => {
+          copyBtn.textContent = '📋 复制URL';
+          copyBtn.style.background = '#667eea';
+        }, 2000);
+      } catch (error) {
+        console.error('复制失败:', error);
+        alert('复制失败，请手动复制URL');
+      }
+    });
+  }
+  
+  // 下载SVG按钮事件
+  const downloadBtn = document.getElementById('download-svg-btn');
+  if (downloadBtn) {
+    downloadBtn.addEventListener('click', downloadAllSVGs);
+  }
 }
 
 /**
@@ -138,39 +183,64 @@ function downloadAllSVGs() {
   const svgs = document.querySelectorAll('svg');
   
   if (svgs.length === 0) {
-    alert('页面中没有找到SVG元素');
+    // 使用更友好的提示方式
+    const downloadBtn = document.getElementById('download-svg-btn');
+    if (downloadBtn) {
+      downloadBtn.textContent = '❌ 无SVG';
+      downloadBtn.style.background = '#dc3545';
+      setTimeout(() => {
+        downloadBtn.textContent = '📥 下载SVG';
+        downloadBtn.style.background = '#28a745';
+      }, 2000);
+    }
     return;
   }
   
+  let downloadedCount = 0;
+  
   svgs.forEach((svg, index) => {
-    // 创建SVG的副本
-    const svgClone = svg.cloneNode(true);
-    
-    // 确保SVG有正确的命名空间
-    svgClone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-    
-    // 获取SVG的字符串表示
-    const svgString = new XMLSerializer().serializeToString(svgClone);
-    
-    // 创建Blob对象
-    const blob = new Blob([svgString], { type: 'image/svg+xml' });
-    
-    // 创建下载链接
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `svg-${index + 1}-${Date.now()}.svg`;
-    
-    // 触发下载
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    // 清理URL对象
-    URL.revokeObjectURL(url);
+    try {
+      // 创建SVG的副本
+      const svgClone = svg.cloneNode(true);
+      
+      // 确保SVG有正确的命名空间
+      svgClone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      
+      // 获取SVG的字符串表示
+      const svgString = new XMLSerializer().serializeToString(svgClone);
+      
+      // 创建Blob对象
+      const blob = new Blob([svgString], { type: 'image/svg+xml' });
+      
+      // 创建下载链接
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `svg-${index + 1}-${Date.now()}.svg`;
+      
+      // 触发下载
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // 清理URL对象
+      URL.revokeObjectURL(url);
+      downloadedCount++;
+    } catch (error) {
+      console.error(`下载SVG ${index + 1} 失败:`, error);
+    }
   });
   
-  alert(`已下载 ${svgs.length} 个SVG文件`);
+  // 更新按钮状态
+  const downloadBtn = document.getElementById('download-svg-btn');
+  if (downloadBtn) {
+    downloadBtn.textContent = `✅ 已下载 ${downloadedCount}`;
+    downloadBtn.style.background = '#28a745';
+    setTimeout(() => {
+      downloadBtn.textContent = '📥 下载SVG';
+      downloadBtn.style.background = '#28a745';
+    }, 3000);
+  }
 }
 
 /**
