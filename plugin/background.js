@@ -89,9 +89,16 @@ async function syncScripts() {
         if (scriptContent) {
           updatedScripts[remoteFile.name] = {
             ...scriptContent,
-            autoExecute: localScript?.autoExecute || false,
+            // 类似Tampermonkey的配置选项
             enabled: localScript?.enabled !== false, // 默认启用
-            urlPatterns: localScript?.urlPatterns || ['*://*/*'] // 默认匹配所有URL
+            autoExecute: localScript?.autoExecute || false, // 默认手动执行
+            manualTrigger: localScript?.manualTrigger !== false, // 默认支持手动触发
+            urlPatterns: localScript?.urlPatterns || ['*://*/*'], // 默认匹配所有URL
+            runAt: localScript?.runAt || 'document-end', // 运行时机：document-start, document-end, document-idle
+            noFrames: localScript?.noFrames || false, // 是否在iframe中运行
+            description: localScript?.description || '用户脚本', // 脚本描述
+            version: localScript?.version || '1.0.0', // 脚本版本
+            author: localScript?.author || 'Unknown' // 脚本作者
           };
         }
       }
@@ -132,41 +139,97 @@ function matchesPattern(url, patterns) {
 }
 
 /**
- * 在指定标签页执行脚本
+ * 在指定标签页执行脚本 - 类似Tampermonkey的方式
  */
 async function executeScriptInTab(tabId, scriptName, scriptContent) {
   try {
-    // 方法1：直接注入脚本代码（最安全的方式）
     console.log(`开始执行脚本: ${scriptName}`);
     
+    // 方法：使用world: 'MAIN'在主世界执行，类似Tampermonkey
     await chrome.scripting.executeScript({
       target: { tabId: tabId },
-      code: `
-        console.log('Chrome Scripts Manager: 执行脚本 - ${scriptName}');
+      world: 'MAIN', // 在主世界执行，绕过CSP限制
+      func: (scriptContent, scriptName) => {
         try {
-          ${scriptContent}
+          console.log(`Chrome Scripts Manager: 执行脚本 - ${scriptName}`);
+          
+          // 创建一个新的Function对象来执行代码，避免CSP限制
+          const scriptFunction = new Function(scriptContent);
+          scriptFunction();
+          
+          console.log(`Chrome Scripts Manager: 脚本 ${scriptName} 执行完成`);
         } catch (error) {
-          console.error('Chrome Scripts Manager: 脚本执行错误 - ${scriptName}:', error);
+          console.error(`Chrome Scripts Manager: 脚本 ${scriptName} 执行错误:`, error);
         }
-      `
+      },
+      args: [scriptContent, scriptName]
     });
     
     console.log(`脚本 ${scriptName} 在标签页 ${tabId} 中执行成功`);
   } catch (error) {
-    console.error(`执行脚本 ${scriptName} 失败:`, error);
+    // 如果MAIN world不支持，fallback到ISOLATED world
+    console.warn(`主世界执行失败，尝试隔离世界: ${error.message}`);
+    try {
+      await chrome.scripting.executeScript({
+        target: { tabId: tabId },
+        func: (scriptContent, scriptName) => {
+          try {
+            console.log(`Chrome Scripts Manager: 在隔离世界执行脚本 - ${scriptName}`);
+            
+            // 使用更激进的注入方式
+            const script = document.createElement('script');
+            script.setAttribute('type', 'text/javascript');
+            
+            // 使用data URL来绕过CSP
+            const dataUrl = 'data:text/javascript;base64,' + btoa(unescape(encodeURIComponent(scriptContent)));
+            script.src = dataUrl;
+            
+            // 注入到页面
+            (document.head || document.documentElement).appendChild(script);
+            
+            // 执行后移除
+            setTimeout(() => {
+              if (script.parentNode) {
+                script.parentNode.removeChild(script);
+              }
+            }, 100);
+            
+            console.log(`Chrome Scripts Manager: 脚本 ${scriptName} 注入完成`);
+          } catch (error) {
+            console.error(`Chrome Scripts Manager: 脚本 ${scriptName} 注入错误:`, error);
+          }
+        },
+        args: [scriptContent, scriptName]
+      });
+    } catch (fallbackError) {
+      console.error(`执行脚本 ${scriptName} 完全失败:`, fallbackError);
+    }
   }
 }
 
 /**
- * 检查并执行自动脚本
+ * 检查并执行自动脚本 - 类似Tampermonkey的执行逻辑
  */
-async function checkAndExecuteAutoScripts(tabId, url) {
+async function checkAndExecuteAutoScripts(tabId, url, frameId = 0) {
   try {
     const { scripts = {} } = await chrome.storage.local.get('scripts');
     
     for (const [scriptName, script] of Object.entries(scripts)) {
-      if (script.enabled && script.autoExecute && matchesPattern(url, script.urlPatterns)) {
-        await executeScriptInTab(tabId, scriptName, script.content);
+      // 检查脚本是否应该执行
+      if (script.enabled && 
+          script.autoExecute && 
+          matchesPattern(url, script.urlPatterns)) {
+        
+        // 检查iframe执行设置
+        if (script.noFrames && frameId !== 0) {
+          console.log(`跳过iframe中的脚本: ${scriptName}`);
+          continue;
+        }
+        
+        // 根据runAt设置执行时机（这里是document-end时机）
+        if (script.runAt === 'document-end') {
+          await executeScriptInTab(tabId, scriptName, script.content);
+        }
       }
     }
   } catch (error) {

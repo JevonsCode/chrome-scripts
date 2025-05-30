@@ -11,13 +11,17 @@ const elements = {
   scriptsList: document.getElementById('scriptsList'),
   emptyState: document.getElementById('emptyState'),
   
-  // 模态框元素
+  // 模态框元素 - 类似Tampermonkey的配置
   modal: document.getElementById('scriptModal'),
   modalTitle: document.getElementById('modalTitle'),
   closeModal: document.getElementById('closeModal'),
-  autoExecuteCheck: document.getElementById('autoExecuteCheck'),
   enabledCheck: document.getElementById('enabledCheck'),
+  autoExecuteCheck: document.getElementById('autoExecuteCheck'),
+  manualTriggerCheck: document.getElementById('manualTriggerCheck'),
+  noFramesCheck: document.getElementById('noFramesCheck'),
+  runAtSelect: document.getElementById('runAtSelect'),
   urlPatterns: document.getElementById('urlPatterns'),
+  description: document.getElementById('description'),
   saveSettings: document.getElementById('saveSettings'),
   cancelSettings: document.getElementById('cancelSettings')
 };
@@ -136,23 +140,35 @@ function renderScriptsList(scripts) {
 }
 
 /**
- * 创建脚本项HTML
+ * 创建脚本项HTML - 类似Tampermonkey的风格
  */
 function createScriptItemHTML(scriptName, script) {
   const badges = [];
   
   if (!script.enabled) {
     badges.push('<span class="badge disabled">已禁用</span>');
-  } else if (script.autoExecute) {
-    badges.push('<span class="badge auto">自动</span>');
   } else {
-    badges.push('<span class="badge manual">手动</span>');
+    if (script.autoExecute) {
+      badges.push('<span class="badge auto">自动</span>');
+    }
+    if (script.manualTrigger) {
+      badges.push('<span class="badge manual">手动</span>');
+    }
   }
+  
+  // 添加运行时机标识
+  const runAtMap = {
+    'document-start': '🚀 开始时',
+    'document-end': '📄 结束时', 
+    'document-idle': '💤 空闲时'
+  };
+  badges.push(`<span class="badge timing">${runAtMap[script.runAt] || '📄 结束时'}</span>`);
   
   const lastModified = script.lastModified ? 
     new Date(script.lastModified).toLocaleString('zh-CN') : '未知';
   
   const size = script.size ? formatFileSize(script.size) : '未知大小';
+  const description = script.description || '用户脚本';
   
   return `
     <div class="script-item ${!script.enabled ? 'disabled' : ''}" data-script="${scriptName}">
@@ -163,17 +179,26 @@ function createScriptItemHTML(scriptName, script) {
         </div>
       </div>
       
+      <div class="script-description" style="font-size: 12px; color: #6c757d; margin-bottom: 6px;">
+        ${description}
+      </div>
+      
       <div class="script-meta">
         大小: ${size} • 更新: ${lastModified}
+        ${script.noFrames ? ' • 不运行于框架' : ''}
       </div>
       
       <div class="script-actions">
-        <button class="btn btn-primary execute-btn" 
-                ${!script.enabled ? 'disabled' : ''}>
-          执行
-        </button>
+        ${script.enabled && script.manualTrigger ? 
+          `<button class="btn btn-primary execute-btn">
+            🎯 手动执行
+          </button>` : 
+          `<button class="btn btn-primary execute-btn" disabled>
+            执行
+          </button>`
+        }
         <button class="btn btn-secondary settings-btn">
-          设置
+          ⚙️ 设置
         </button>
       </div>
     </div>
@@ -246,6 +271,10 @@ async function openScriptSettings(scriptName) {
     elements.autoExecuteCheck.checked = script.autoExecute || false;
     elements.enabledCheck.checked = script.enabled !== false;
     elements.urlPatterns.value = (script.urlPatterns || ['*://*/*']).join('\n');
+    elements.manualTriggerCheck.checked = script.manualTrigger || false;
+    elements.noFramesCheck.checked = script.noFrames || false;
+    elements.runAtSelect.value = script.runAt || 'document-start';
+    elements.description.value = script.description || '';
     
     // 显示模态框
     elements.modal.style.display = 'flex';
@@ -286,7 +315,11 @@ async function saveScriptSettings() {
     const config = {
       autoExecute: elements.autoExecuteCheck.checked,
       enabled: elements.enabledCheck.checked,
-      urlPatterns: urlPatterns
+      urlPatterns: urlPatterns,
+      manualTrigger: elements.manualTriggerCheck.checked,
+      noFrames: elements.noFramesCheck.checked,
+      runAt: elements.runAtSelect.value,
+      description: elements.description.value
     };
     
     const response = await chrome.runtime.sendMessage({

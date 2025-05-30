@@ -152,13 +152,19 @@ body {
 }
 
 .badge.manual {
-  background: #cce7ff;
-  color: #0056b3;
+  background: #fff3cd;
+  color: #856404;
 }
 
 .badge.disabled {
   background: #f8d7da;
   color: #721c24;
+}
+
+.badge.timing {
+  background: #f8f9fa;
+  color: #495057;
+  border: 1px solid #dee2e6;
 }
 
 .script-meta {
@@ -180,6 +186,8 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   margin-right: 6px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .btn-primary {
@@ -353,6 +361,14 @@ body {
   color: #6c757d;
 }
 
+.setting-group select {
+  font-size: 12px;
+}
+
+.setting-group input[type="text"] {
+  font-size: 12px;
+}
+
 /* 开关样式 */
 .switch {
   display: flex;
@@ -471,4 +487,9 @@ body {
 .scripts-container::-webkit-scrollbar-thumb:hover,
 .modal-body::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
+}
+
+.script-description {
+  font-style: italic;
+  line-height: 1.3;
 } 

@@ -69,6 +69,14 @@
       <div class="modal-body">
         <div class="setting-group">
           <label class="switch">
+            <input type="checkbox" id="enabledCheck">
+            <span class="slider"></span>
+            <span class="label-text">启用脚本</span>
+          </label>
+        </div>
+        
+        <div class="setting-group">
+          <label class="switch">
             <input type="checkbox" id="autoExecuteCheck">
             <span class="slider"></span>
             <span class="label-text">自动执行</span>
@@ -77,16 +85,42 @@
         
         <div class="setting-group">
           <label class="switch">
-            <input type="checkbox" id="enabledCheck">
+            <input type="checkbox" id="manualTriggerCheck">
             <span class="slider"></span>
-            <span class="label-text">启用脚本</span>
+            <span class="label-text">支持手动触发</span>
           </label>
+          <small>类似Tampermonkey的手动执行按钮</small>
+        </div>
+        
+        <div class="setting-group">
+          <label class="switch">
+            <input type="checkbox" id="noFramesCheck">
+            <span class="slider"></span>
+            <span class="label-text">不在框架中运行</span>
+          </label>
+          <small>防止在iframe中重复执行</small>
+        </div>
+        
+        <div class="setting-group">
+          <label for="runAtSelect">运行时机：</label>
+          <select id="runAtSelect" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+            <option value="document-start">文档开始</option>
+            <option value="document-end">文档结束</option>
+            <option value="document-idle">文档空闲</option>
+          </select>
+          <small>控制脚本何时执行</small>
         </div>
         
         <div class="setting-group">
           <label for="urlPatterns">URL匹配模式：</label>
           <textarea id="urlPatterns" placeholder="*://*/*&#10;https://example.com/*&#10;*://github.com/*" rows="4"></textarea>
           <small>每行一个模式，支持通配符 *</small>
+        </div>
+        
+        <div class="setting-group">
+          <label for="description">脚本描述：</label>
+          <input type="text" id="description" placeholder="输入脚本描述..." 
+                 style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
         </div>
       </div>
       

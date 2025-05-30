@@ -1,3 +1,13 @@
+// ==UserScript==
+// @name         页面SVG下载器
+// @description  页面信息显示和SVG下载功能 - 手动触发版本
+// @version      1.0.0
+// @author       Chrome Scripts Manager
+// @match        *://*/*
+// @run-at       document-end
+// @manual-trigger true
+// ==/UserScript==
+
 /**
  * 页面SVG下载脚本 - 手动执行版本
  * 添加一个浮动按钮，用户点击后显示页面信息和SVG下载功能
