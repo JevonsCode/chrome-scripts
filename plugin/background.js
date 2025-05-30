@@ -136,17 +136,19 @@ function matchesPattern(url, patterns) {
  */
 async function executeScriptInTab(tabId, scriptName, scriptContent) {
   try {
+    // 方法1：直接注入脚本代码（最安全的方式）
+    console.log(`开始执行脚本: ${scriptName}`);
+    
     await chrome.scripting.executeScript({
       target: { tabId: tabId },
-      func: (script, name) => {
-        console.log(`执行脚本: ${name}`);
-        // 创建一个新的脚本元素并执行
-        const scriptElement = document.createElement('script');
-        scriptElement.textContent = script;
-        document.head.appendChild(scriptElement);
-        document.head.removeChild(scriptElement);
-      },
-      args: [scriptContent, scriptName]
+      code: `
+        console.log('Chrome Scripts Manager: 执行脚本 - ${scriptName}');
+        try {
+          ${scriptContent}
+        } catch (error) {
+          console.error('Chrome Scripts Manager: 脚本执行错误 - ${scriptName}:', error);
+        }
+      `
     });
     
     console.log(`脚本 ${scriptName} 在标签页 ${tabId} 中执行成功`);
