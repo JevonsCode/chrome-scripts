@@ -3,6 +3,12 @@
   "name": "Chrome Scripts Manager",
   "version": "1.0.0",
   "description": "自动同步并执行GitHub仓库中的JavaScript脚本",
+  "icons": {
+    "16": "icon128.png",
+    "32": "icon128.png",
+    "48": "icon128.png",
+    "128": "icon128.png"
+  },
   "permissions": [
     "storage",
     "activeTab",
