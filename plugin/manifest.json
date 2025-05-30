@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Chrome Scripts Manager",
+  "version": "1.0.0",
+  "description": "自动同步并执行GitHub仓库中的JavaScript脚本",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "background",
+    "alarms",
+    "https://api.github.com/*",
+    "https://raw.githubusercontent.com/*"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Scripts Manager"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["injected.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+} 
